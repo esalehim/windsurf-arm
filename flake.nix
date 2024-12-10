@@ -41,8 +41,8 @@
             cp -R ${windsurfSrc}/resources/app/out ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/*.json ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/extensions/windsurf-* ${root}/resources/app/extensions/
-            rm -rf "${root}/resources/app/node_modules"{,.asar}
-            cp -R ${windsurfSrc}/resources/app/node_modules{,.asar} ${root}/resources/app/
+            rm -rf "${root}/resources/app/node_modules.asar"
+            cp -R ${windsurfSrc}/resources/app/node_modules.asar ${root}/resources/app/
             rm -rf ${root}/resources/app/resources
             cp -R ${windsurfSrc}/resources/app/resources ${root}/resources/app/
             rm -rf ${root}/bin
