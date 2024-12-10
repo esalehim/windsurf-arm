@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: linux-arm64
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -21,21 +21,12 @@ jobs:
     - name: Build Linux ARM64
       run: |
         mkdir -p artifacts
-        nix build .#cursor.linux.arm64-targz
-        cp result/* artifacts/
-        nix build .#cursor.linux.arm64-appimage
-        cp result/* artifacts/
-        
-    - name: Build Linux ARM32
-      run: |
-        nix build .#cursor.linux.arm32-targz
-        cp result/* artifacts/
-        nix build .#cursor.linux.arm32-appimage
+        nix build .#windsurf.linux.arm64-targz
         cp result/* artifacts/
         
     - name: Build Windows ARM64
       run: |
-        nix build .#cursor.windows.arm64-zip
+        nix build .#windsurf.windows.arm64-zip
         cp result/* artifacts/
         
     - name: Create Release
@@ -49,7 +40,7 @@ jobs:
         draft: false
         prerelease: false
         body: |
-          See [the official changelog](https://changelog.cursor.sh/).
+          See [the official page](https://codeium.com/windsurf) for more information.
         
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1

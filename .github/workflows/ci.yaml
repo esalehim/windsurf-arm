@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: linux-arm64
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
@@ -17,27 +17,17 @@ jobs:
 
     - name: Test Linux ARM64
       run: |
-        nix build .#cursor.linux.arm64-targz
-        file result/*
-        nix build .#cursor.linux.arm64-appimage
-        file result/*
-        rm -rf result
-
-    - name: Test Linux ARM32 builds
-      run: |
-        nix build .#cursor.linux.arm32-targz
-        file result/*
-        nix build .#cursor.linux.arm32-appimage
+        nix build .#windsurf.linux.arm64-targz
         file result/*
         rm -rf result
 
     - name: Test Windows ARM64 build
       run: |
-        nix build .#cursor.windows.arm64-zip
+        nix build .#windsurf.windows.arm64-zip
         file result/*
         rm -rf result
 
     - name: Test Nix build
       run: |
-        nix build .#cursor.nix
+        nix build .#windsurf.nix
         cd result && ls -alh
