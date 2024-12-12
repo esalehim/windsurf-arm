@@ -22,6 +22,10 @@
           # Version of Windsurf being built
           windsurfVersion = "1.0.7";
 
+          # Defined in /resources/app/extensions/windsurf/dist/extension.js
+          # t.LANGUAGE_SERVER_VERSION="1.30.0"
+          languageServerVersion = "1.30.0";
+
           windsurfSrc = builtins.fetchTarball {
             url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/bf4345439764c543a1e5ff3517bbce5a22128bca/Windsurf-linux-x64-1.0.7.tar.gz";
             sha256 = "sha256:1wkbjfxndiyi1sb518g9fm4i55r4i31ma6jrpmyd7dcy4gcjacfi";
@@ -35,12 +39,35 @@
             url = "https://update.code.visualstudio.com/${vscodeVersion}/win32-arm64-archive/stable#file.zip";
             sha256 = "sha256-Ybxfv/pb0p5hF3Xul/V0DjbkRDuTt+q+pzK+H61g1i8=";
           };
+          languageServerWin = pkgs.fetchurl {
+            url = "https://github.com/Exafunction/codeium/releases/download/language-server-v${languageServerVersion}/language_server_windows_x64.exe";
+            sha256 = "sha256-4tSwhbqmrc3oTCMnPFy8yXZAu2dT/9BO7VmD2+UBzPY=";
+          };
+          languageServerArm64 = pkgs.fetchurl {
+            url = "https://github.com/Exafunction/codeium/releases/download/language-server-v${languageServerVersion}/language_server_linux_arm";
+            sha256 = "sha256-agYAxMtRaF90a+kd72bpZJQV1/5WMLjFfdYCzElx9wU=";
+            executable = true;
+          };
+          fdArm64 = builtins.fetchTarball {
+            url = "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-aarch64-unknown-linux-gnu.tar.gz";
+            sha256 = "sha256:0f7y8mjvxjf3zn07dx84hnh9zgf2pms3xc1jwjnk7f1mn9fk17xr";
+          };
+          fdWin = pkgs.fetchzip {
+            url = "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-pc-windows-gnu.zip";
+            sha256 = "sha256-b7ZK5J1KdVp5ioB5qJgy/SY0KXNcoWxG3MmxpdyEMdA=";
+          };
 
           # Copies Windsurf-specific resources into the VS Code package.
           copyWindsurfFiles = root: ''
             cp -R ${windsurfSrc}/resources/app/out ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/*.json ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/extensions/windsurf-* ${root}/resources/app/extensions/
+            mkdir -p ${root}/resources/app/extensions/windsurf/bin
+            cp -R ${windsurfSrc}/resources/app/extensions/windsurf/{*.js,*.json,*.mjs,assets,dist,out} ${root}/resources/app/extensions/windsurf/
+            install -Dm 755 ${languageServerWin} ${root}/resources/app/extensions/windsurf/bin/language_server_windows_x64.exe
+            install -Dm 755 ${fdWin}/fd.exe ${root}/resources/app/extensions/windsurf/bin/fd.exe
+            install -Dm 755 ${languageServerArm64} ${root}/resources/app/extensions/windsurf/bin/language_server_linux_arm
+            install -Dm 755 ${fdArm64}/fd ${root}/resources/app/extensions/windsurf/bin/fd
             rm -rf "${root}/resources/app/node_modules.asar"
             cp -R ${windsurfSrc}/resources/app/node_modules.asar ${root}/resources/app/
             rm -rf ${root}/resources/app/resources
@@ -50,37 +77,6 @@
           '';
 
           artifactName = os: arch: ext: "windsurf_${windsurfVersion}_${os}_${arch}.${ext}";
-
-          # Overrides the VS Code package with Windsurf's resources.
-          buildWindsurfNix = { vscodePackage }:
-            vscodePackage.overrideAttrs (oldAttrs: {
-              pname = "windsurf";
-              version = windsurfVersion;
-              executableName = "windsurf";
-
-              postInstall = (oldAttrs.postInstall or "") + ''
-                ${(copyWindsurfFiles "$out/lib/vscode")}
-
-                # Replace VS Code's icon and desktop file with Windsurf's
-                cp ${windsurfSrc}/resources/app/resources/linux/code.png $out/share/pixmaps/windsurf.png
-
-                # Rename the binary
-                mv $out/bin/code $out/bin/windsurf || true
-                mv $out/bin/codium $out/bin/windsurf || true
-
-                # Wrap the binary to disable no-new-privileges
-                mv $out/bin/windsurf $out/bin/.windsurf-wrapped
-                makeWrapper $out/bin/.windsurf-wrapped $out/bin/windsurf \
-                  --set NO_NEW_PRIVILEGES "0"
-              '';
-
-              nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
-
-              meta = oldAttrs.meta // {
-                description = "Windsurf ${windsurfVersion}";
-                mainProgram = "windsurf";
-              };
-            });
 
           # Builds Windsurf using a prepackaged set of VS Code files.
           # This is for creating dynamically linked builds.
@@ -95,15 +91,9 @@
 
                 ${copyWindsurfFiles "$out"}
 
-                # Replace VS Code's icon and desktop file with Windsurf's
-                #cp ${windsurfSrc}/resources/app/resources/linux/code.png $out/windsurf.png
-                #cp ${windsurfSrc}/windsurf.desktop $out/windsurf.desktop
-                #cp -R ${windsurfSrc}/resources/todesktop* $out/resources/
-
                 mv $out/code $out/windsurf || true
                 mv $out/codium $out/windsurf || true
                 mv $out/Code.exe $out/Windsurf.exe || true
-
               '';
             };
         in
@@ -137,10 +127,6 @@
                 cd ${self.packages.${system}.windsurf.windows.arm64}
                 ${pkgs.zip}/bin/zip -r $out/${artifactName "windows" "arm64" "zip"} .
               '';
-            };
-
-            nix = buildWindsurfNix {
-              vscodePackage = pkgs.vscodium;
             };
           };
 
