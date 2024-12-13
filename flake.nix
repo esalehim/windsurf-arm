@@ -58,16 +58,19 @@
           };
 
           # Copies Windsurf-specific resources into the VS Code package.
-          copyWindsurfFiles = root: ''
+          copyWindsurfFiles = root: isWindows: ''
             cp -R ${windsurfSrc}/resources/app/out ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/*.json ${root}/resources/app/
             cp -R ${windsurfSrc}/resources/app/extensions/windsurf-* ${root}/resources/app/extensions/
             mkdir -p ${root}/resources/app/extensions/windsurf/bin
             cp -R ${windsurfSrc}/resources/app/extensions/windsurf/{*.js,*.json,*.mjs,assets,dist,out} ${root}/resources/app/extensions/windsurf/
-            install -Dm 755 ${languageServerWin} ${root}/resources/app/extensions/windsurf/bin/language_server_windows_x64.exe
-            install -Dm 755 ${fdWin}/fd.exe ${root}/resources/app/extensions/windsurf/bin/fd.exe
-            install -Dm 755 ${languageServerArm64} ${root}/resources/app/extensions/windsurf/bin/language_server_linux_arm
-            install -Dm 755 ${fdArm64}/fd ${root}/resources/app/extensions/windsurf/bin/fd
+            ${if isWindows then ''
+              install -Dm 755 ${languageServerWin} ${root}/resources/app/extensions/windsurf/bin/language_server_windows_x64.exe
+              install -Dm 755 ${fdWin}/fd.exe ${root}/resources/app/extensions/windsurf/bin/fd.exe
+            '' else ''
+              install -Dm 755 ${languageServerArm64} ${root}/resources/app/extensions/windsurf/bin/language_server_linux_arm
+              install -Dm 755 ${fdArm64}/fd ${root}/resources/app/extensions/windsurf/bin/fd
+            ''}
             rm -rf "${root}/resources/app/node_modules.asar"
             cp -R ${windsurfSrc}/resources/app/node_modules.asar ${root}/resources/app/
             rm -rf ${root}/resources/app/resources
@@ -89,7 +92,7 @@
               buildPhase = ''
                 cp -R --preserve=mode,timestamps . $out
 
-                ${copyWindsurfFiles "$out"}
+                ${copyWindsurfFiles "$out" isWindows}
 
                 mv $out/code $out/windsurf || true
                 mv $out/codium $out/windsurf || true
