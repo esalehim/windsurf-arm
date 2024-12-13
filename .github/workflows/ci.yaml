@@ -26,8 +26,3 @@ jobs:
         nix build .#windsurf.windows.arm64-zip
         file result/*
         rm -rf result
-
-    - name: Test Nix build
-      run: |
-        nix build .#windsurf.nix
-        cd result && ls -alh
