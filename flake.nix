@@ -20,15 +20,15 @@
           vscodeVersion = "1.94.0";
 
           # Version of Windsurf being built
-          windsurfVersion = "1.0.7";
+          windsurfVersion = "1.1.0";
 
           # Defined in /resources/app/extensions/windsurf/dist/extension.js
           # t.LANGUAGE_SERVER_VERSION="1.30.0"
-          languageServerVersion = "1.30.0";
+          languageServerVersion = "1.30.2";
 
           windsurfSrc = builtins.fetchTarball {
-            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/bf4345439764c543a1e5ff3517bbce5a22128bca/Windsurf-linux-x64-1.0.7.tar.gz";
-            sha256 = "sha256:1wkbjfxndiyi1sb518g9fm4i55r4i31ma6jrpmyd7dcy4gcjacfi";
+            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/c418a14b63f051e96dafb37fe06f1fe0b10ba3c8/Windsurf-linux-x64-1.1.0.tar.gz";
+            sha256 = "sha256:05y28qg9aqphixvdh4qhd8hwgi6dwll4rg8pryznhmbl62q19gsm";
           };
           vscodeLinuxArm64 = builtins.fetchTarball {
             url = "https://update.code.visualstudio.com/${vscodeVersion}/linux-arm64/stable";
