@@ -20,15 +20,15 @@
           vscodeVersion = "1.94.0";
 
           # Version of Windsurf being built
-          windsurfVersion = "1.1.0";
+          windsurfVersion = "1.3.4";
 
           # Defined in /resources/app/extensions/windsurf/dist/extension.js
           # t.LANGUAGE_SERVER_VERSION="1.30.0"
-          languageServerVersion = "1.30.2";
+          languageServerVersion = "1.36.1";
 
           windsurfSrc = builtins.fetchTarball {
-            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/c418a14b63f051e96dafb37fe06f1fe0b10ba3c8/Windsurf-linux-x64-1.1.0.tar.gz";
-            sha256 = "sha256:05y28qg9aqphixvdh4qhd8hwgi6dwll4rg8pryznhmbl62q19gsm";
+            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/ff5014a12e72ceb812f9e7f61876befac66725e5/Windsurf-linux-x64-1.3.4.tar.gz";
+            sha256 = "sha256:0j13nyb59cyj4qlpdfdcrbljpaafq5msr8llvdnrk3a3fg6ihbaw";
           };
           vscodeLinuxArm64 = builtins.fetchTarball {
             url = "https://update.code.visualstudio.com/${vscodeVersion}/linux-arm64/stable";
@@ -41,11 +41,11 @@
           };
           languageServerWin = pkgs.fetchurl {
             url = "https://github.com/Exafunction/codeium/releases/download/language-server-v${languageServerVersion}/language_server_windows_x64.exe";
-            sha256 = "sha256-4tSwhbqmrc3oTCMnPFy8yXZAu2dT/9BO7VmD2+UBzPY=";
+            sha256 = "sha256-kBSfsRj1gF8N19YwCD1EgnJKMMJd3AI6KnyGQ1FC/Bo=";
           };
           languageServerArm64 = pkgs.fetchurl {
             url = "https://github.com/Exafunction/codeium/releases/download/language-server-v${languageServerVersion}/language_server_linux_arm";
-            sha256 = "sha256-agYAxMtRaF90a+kd72bpZJQV1/5WMLjFfdYCzElx9wU=";
+            sha256 = "sha256-CbRFYjIcT0neUUgKMKZ+t7U6ZYCm6EeZvXRrgNDS4qA=";
             executable = true;
           };
           fdArm64 = builtins.fetchTarball {
