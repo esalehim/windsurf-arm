@@ -27,8 +27,8 @@
           languageServerVersion = "1.36.1";
 
           windsurfSrc = builtins.fetchTarball {
-            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/ff5014a12e72ceb812f9e7f61876befac66725e5/Windsurf-linux-x64-1.3.4.tar.gz";
-            sha256 = "sha256:0j13nyb59cyj4qlpdfdcrbljpaafq5msr8llvdnrk3a3fg6ihbaw";
+            url = "https://windsurf-stable.codeiumdata.com/linux-x64/stable/61d65579650f356494469f86c21fb953834289a0/Windsurf-linux-x64-1.3.10.tar.gz";
+            sha256 = "sha256:9a98223f0629b0e0219d82902b8c38d18dd08dd8b6700d2739419a385344d17f";
           };
           vscodeLinuxArm64 = builtins.fetchTarball {
             url = "https://update.code.visualstudio.com/${vscodeVersion}/linux-arm64/stable";
