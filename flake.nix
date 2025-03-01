@@ -20,7 +20,7 @@
           vscodeVersion = "1.94.0";
 
           # Version of Windsurf being built
-          windsurfVersion = "1.3.4";
+          windsurfVersion = "1.3.10";
 
           # Defined in /resources/app/extensions/windsurf/dist/extension.js
           # t.LANGUAGE_SERVER_VERSION="1.30.0"
